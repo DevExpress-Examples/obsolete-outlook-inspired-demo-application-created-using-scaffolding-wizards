@@ -1,0 +1,100 @@
+<!--region #Lesson6-->
+<UserControl x:Class="DevExpress.DevAV.Views.CustomerCollectionView" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon" xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:viewmodel="clr-namespace:DevExpress.DevAV.ViewModels" mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="600" DataContext="{dxmvvm:ViewModelSource viewmodel:CustomerCollectionViewModel}">
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+        <dx:WindowedDocumentUIService DocumentShowMode="Dialog" WindowType="dxr:DXRibbonWindow" />
+    </dxmvvm:Interaction.Behaviors>
+    <Grid>
+        <DockPanel>
+            <dxr:RibbonControl RibbonStyle="Office2010" DockPanel.Dock="Top">
+                <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                    <dxr:RibbonPage Caption="HOME">
+                        <dxr:RibbonPageGroup Caption="Customer Tasks">
+                            <dxb:BarButtonItem Content="New" Command="{Binding NewCommand}" LargeGlyph="{dx:DXImageOffice2013 Image=New_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=New_16x16.png}" />
+                            <dxb:BarButtonItem Content="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding SelectedEntity}" LargeGlyph="{dx:DXImageOffice2013 Image=Edit_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=Edit_16x16.png}" />
+                            <dxb:BarButtonItem Content="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedEntity}" LargeGlyph="{dx:DXImageOffice2013 Image=Delete_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=Delete_16x16.png}" />
+                            <dxb:BarButtonItem Content="Refresh" Command="{Binding RefreshCommand}" LargeGlyph="{dx:DXImageOffice2013 Image=Refresh_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=Refresh_16x16.png}" />
+                        </dxr:RibbonPageGroup>
+                        <dxr:RibbonPageGroup Caption="Print and Export">
+                            <dxb:BarButtonItem Content="Print Preview" Command="{Binding TableViewCommands.ShowPrintPreviewDialog, ElementName=tableView}" Glyph="{dx:DXImageOffice2013 Image=Preview_16x16.png}" LargeGlyph="{dx:DXImageOffice2013 Image=Preview_32x32.png}" />
+                        </dxr:RibbonPageGroup>
+                    </dxr:RibbonPage>
+                </dxr:RibbonDefaultPageCategory>
+            </dxr:RibbonControl>
+            <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom">
+                <dxr:RibbonStatusBarControl.LeftItems>
+                    <dxb:BarStaticItem Content="{Binding Entities.Count, Converter={dxmvvm:FormatStringConverter FormatString='RECORDS: {0}'}}" />
+                </dxr:RibbonStatusBarControl.LeftItems>
+            </dxr:RibbonStatusBarControl>
+            <Grid>
+                <dxg:GridControl Name="gridControl" ItemsSource="{Binding Entities}" Margin="1" SelectedItem="{Binding SelectedEntity}" ShowLoadingPanel="{Binding IsLoading}">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand PassEventArgsToCommand="True" Command="{Binding EditCommand}" EventName="MouseDoubleClick">
+                            <dxmvvm:EventToCommand.EventArgsConverter>
+                                <dx:EventArgsToDataRowConverter />
+                            </dxmvvm:EventToCommand.EventArgsConverter>
+                        </dxmvvm:EventToCommand>
+                    </dxmvvm:Interaction.Behaviors>
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn IsSmart="True" FieldName="Logo" Width="24" Header="" FixedWidth="True" AllowResizing="False">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:ImageEditSettings ShowMenu="False" Stretch="Fill" />
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn IsSmart="True" FieldName="Name" Header="CUSTOMER" SortOrder="Ascending" />
+                        <dxg:GridColumn FieldName="AddressLine" Header="ADDRESS" />
+                        <dxg:GridColumn FieldName="AddressCity" Header="CITY" />
+                        <dxg:GridColumn FieldName="AddressState" Header="STATE" />
+                        <dxg:GridColumn FieldName="AddressZipCode" Header="ZIP CODE" />
+                        <dxg:GridColumn IsSmart="True" FieldName="Fax" Header="FAX" Visible="False" />
+                        <dxg:GridColumn IsSmart="True" FieldName="Website" Header="WEBSITE" Visible="False" />
+                        <dxg:GridColumn IsSmart="True" FieldName="TotalStores" Header="STORES" Visible="False" />
+                        <dxg:GridColumn IsSmart="True" FieldName="Status" Header="STATUS" Visible="False" />
+                        <dxg:GridColumn IsSmart="True" FieldName="AnnualRevenue" Header="ANNUAL REVENUE" Visible="False" />
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.DetailDescriptor>
+                        <dxg:DataControlDetailDescriptor ItemsSourcePath="Orders">
+                            <dxg:GridControl>
+                                <dxg:GridControl.View>
+                                    <dxg:TableView DetailHeaderContent="Sales" ShowGroupPanel="False" AutoWidth="True" AllowEditing="False" ShowTotalSummary="True" AllowBestFit="True" NavigationStyle="Row" />
+                                </dxg:GridControl.View>
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn IsSmart="True" FieldName="InvoiceNumber" Header="INVOICE NUMBER" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="Employee.FullName" Header="EMPLOYEE" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="OrderDate" Header="ORDER DATE" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="ShipDate" Header="SHIP DATE" UnboundType="DateTime" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="SaleAmount" Header="SALE AMOUNT" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="ShippingAmount" Header="SHIPPING AMOUNT" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="TotalAmount" Header="TOTAL AMOUNT" />
+                                </dxg:GridControl.Columns>
+                                <dxg:GridControl.TotalSummary>
+                                    <dxg:GridSummaryItem FieldName="InvoiceNumber" SummaryType="Count" />
+                                    <dxg:GridSummaryItem FieldName="SaleAmount" SummaryType="Sum" DisplayFormat="SUM=${0:N}" />
+                                    <dxg:GridSummaryItem FieldName="ShippingAmount" SummaryType="Sum" DisplayFormat="SUM=${0:N}" />
+                                    <dxg:GridSummaryItem FieldName="TotalAmount" SummaryType="Sum" DisplayFormat="SUM=${0:N}" />
+                                </dxg:GridControl.TotalSummary>
+                            </dxg:GridControl>
+                        </dxg:DataControlDetailDescriptor>
+                    </dxg:GridControl.DetailDescriptor>
+                    <dxg:GridControl.TotalSummary>
+                        <dxg:GridSummaryItem SummaryType="Count" Alignment="Right" />
+                    </dxg:GridControl.TotalSummary>
+                    <dxg:GridControl.GroupSummary>
+                        <dxg:GridSummaryItem SummaryType="Count" />
+                    </dxg:GridControl.GroupSummary>
+                    <dxg:GridControl.View>
+                        <dxg:TableView Name="tableView" AllowEditing="False" ShowFixedTotalSummary="True" AllowPerPixelScrolling="True">
+                            <dxg:TableView.RowCellMenuCustomizations>
+                                <dxb:BarButtonItem Content="New" Command="{Binding View.DataContext.NewCommand}" Glyph="{dx:DXImageOffice2013 Image=New_16x16.png}" />
+                                <dxb:BarButtonItem Content="Edit" Command="{Binding View.DataContext.EditCommand}" CommandParameter="{Binding Row.Row}" Glyph="{dx:DXImageOffice2013 Image=Edit_16x16.png}" />
+                                <dxb:BarButtonItem Content="Delete" Command="{Binding View.DataContext.DeleteCommand}" CommandParameter="{Binding Row.Row}" Glyph="{dx:DXImageOffice2013 Image=Delete_16x16.png}" />
+                                <dxb:BarButtonItem Content="Refresh" Command="{Binding View.DataContext.RefreshCommand}" Glyph="{dx:DXImageOffice2013 Image=Refresh_16x16.png}" />
+                            </dxg:TableView.RowCellMenuCustomizations>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</UserControl>
+<!--endregion #Lesson6-->

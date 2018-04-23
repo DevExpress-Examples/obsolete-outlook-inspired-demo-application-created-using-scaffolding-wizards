@@ -1,0 +1,90 @@
+<!--region #Lesson5-->
+<UserControl x:Class="DevExpress.DevAV.Views.EmployeeCollectionView" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon" xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:viewmodel="clr-namespace:DevExpress.DevAV.ViewModels" xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:view="clr-namespace:DevExpress.OutlookInspiredApp.Views" mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="600" DataContext="{dxmvvm:ViewModelSource viewmodel:EmployeeCollectionViewModel}">
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+        <dx:WindowedDocumentUIService DocumentShowMode="Dialog" WindowType="dxr:DXRibbonWindow" />
+    </dxmvvm:Interaction.Behaviors>
+    <Grid>
+        <DockPanel>
+            <dxr:RibbonControl RibbonStyle="Office2010" DockPanel.Dock="Top">
+                <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                    <dxr:RibbonPage Caption="HOME">
+                        <dxr:RibbonPageGroup Caption="Employee Tasks">
+                            <dxb:BarButtonItem Content="New" Command="{Binding NewCommand}" LargeGlyph="{dx:DXImageOffice2013 Image=New_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=New_16x16.png}" />
+                            <dxb:BarButtonItem Content="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding SelectedEntity}" LargeGlyph="{dx:DXImageOffice2013 Image=Edit_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=Edit_16x16.png}" />
+                            <dxb:BarButtonItem Content="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedEntity}" LargeGlyph="{dx:DXImageOffice2013 Image=Delete_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=Delete_16x16.png}" />
+                            <dxb:BarButtonItem Content="Refresh" Command="{Binding RefreshCommand}" LargeGlyph="{dx:DXImageOffice2013 Image=Refresh_32x32.png}" Glyph="{dx:DXImageOffice2013 Image=Refresh_16x16.png}" />
+                        </dxr:RibbonPageGroup>
+                        <dxr:RibbonPageGroup Caption="Print and Export">
+                            <dxb:BarButtonItem Content="Print Preview" Command="{Binding TableViewCommands.ShowPrintPreviewDialog, ElementName=tableView}" Glyph="{dx:DXImageOffice2013 Image=Preview_16x16.png}" LargeGlyph="{dx:DXImageOffice2013 Image=Preview_32x32.png}" />
+                        </dxr:RibbonPageGroup>
+                    </dxr:RibbonPage>
+                </dxr:RibbonDefaultPageCategory>
+            </dxr:RibbonControl>
+            <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom">
+                <dxr:RibbonStatusBarControl.LeftItems>
+                    <dxb:BarStaticItem Content="{Binding Entities.Count, Converter={dxmvvm:FormatStringConverter FormatString='RECORDS: {0}'}}" />
+                </dxr:RibbonStatusBarControl.LeftItems>
+            </dxr:RibbonStatusBarControl>
+            <dxdo:DockLayoutManager>
+                <dxdo:LayoutGroup>
+                    <dxdo:LayoutGroup Orientation="Vertical">
+                        <dxdo:LayoutPanel ItemHeight="*" ItemWidth="*" ShowBorder="False" ShowCaption="False">
+                            <dxg:GridControl x:Name="gridControl" ItemsSource="{Binding Entities}" Margin="1" SelectedItem="{Binding SelectedEntity}" ShowLoadingPanel="{Binding IsLoading}">
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand PassEventArgsToCommand="True" Command="{Binding EditCommand}" EventName="MouseDoubleClick">
+                                        <dxmvvm:EventToCommand.EventArgsConverter>
+                                            <dx:EventArgsToDataRowConverter />
+                                        </dxmvvm:EventToCommand.EventArgsConverter>
+                                    </dxmvvm:EventToCommand>
+                                </dxmvvm:Interaction.Behaviors>
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn IsSmart="True" FieldName="FirstName" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="LastName" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="Email" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="Skype" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="Title" />
+                                    <dxg:GridColumn IsSmart="True" FieldName="Status" />
+                                </dxg:GridControl.Columns>
+                                <dxg:GridControl.TotalSummary>
+                                    <dxg:GridSummaryItem SummaryType="Count" Alignment="Right" />
+                                </dxg:GridControl.TotalSummary>
+                                <dxg:GridControl.GroupSummary>
+                                    <dxg:GridSummaryItem SummaryType="Count" />
+                                </dxg:GridControl.GroupSummary>
+                                <dxg:GridControl.View>
+                                    <dxg:CardView CardLayout="Rows" ShowSearchPanelMode="Always" ShowGroupPanel="False" SearchPanelHorizontalAlignment="Right" CardHeaderBinding="{Binding Data.FullName, RelativeSource={RelativeSource Mode=Self}}" ShowColumnHeaders="False" SearchPanelNullText="Search Employees (Ctrl + F)">
+                                        <dxg:CardView.CardTemplate>
+                                            <DataTemplate>
+                                                <Grid Width="295" Height="151">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <dxe:ImageEdit IsReadOnly="True" EditValue="{Binding Row.Picture}" Stretch="Uniform" Width="100" Margin="0,0,12,17" />
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="ADDRESS" />
+                                                        <TextBlock Text="{Binding Row.AddressLine}" />
+                                                        <TextBlock Text="{Binding Row.AddressCityLine}" />
+                                                        <TextBlock Text="EMAIL" Margin="0,13,0,0" />
+                                                        <TextBlock Text="{Binding Row.Email}" />
+                                                        <TextBlock Text="PHONE" Margin="0,13,0,0" />
+                                                        <TextBlock Text="{Binding Row.HomePhone}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </dxg:CardView.CardTemplate>
+                                    </dxg:CardView>
+                                </dxg:GridControl.View>
+                            </dxg:GridControl>
+                        </dxdo:LayoutPanel>
+                    </dxdo:LayoutGroup>
+                    <dxdo:LayoutPanel ItemWidth="0.5*" ShowCaption="False" ShowBorder="False">
+                        <view:EmployeeTasksView DataContext="{Binding SelectedEntity}" />
+                    </dxdo:LayoutPanel>
+                </dxdo:LayoutGroup>
+            </dxdo:DockLayoutManager>
+        </DockPanel>
+    </Grid>
+</UserControl>
+<!--endregion #Lesson5-->
