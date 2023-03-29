@@ -1,11 +1,7 @@
-<!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/128659080/16.2.3%2B)
-[![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T196733)
-[![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
-<!-- default badges end -->
-# Outlook Inspired Demo Application Created Using Scaffolding Wizards
+⛔ DEPRECATED. The **Scaffolding Wizard** is not supported in v22.1+. Refer to the following article for more information: [Scaffolding Wizards (for WPF and WinForms) – The Past and the Future](https://community.devexpress.com/blogs/wpf/archive/2022/01/27/scaffolding-wizards-the-past-and-the-future.aspx).
 
+You can use the [Items Source Wizard](https://docs.devexpress.com/WPF/16553/whats-installed/items-source-wizard) instead to generate code for CRUD operations based on your data source.
 
-This is a demo solution that features an MS Office-like UI in a CRM data setting.
+The [WPF Template Gallery](https://docs.devexpress.com/WPF/16495/whats-installed/template-gallery) contains a set of popular application layouts of DevExpress Controls, which you can use in your application.
 
-Follow the [Building Outlook-Insipred and Hybrid UI Applications](https://documentation.devexpress.com/#WPF/CustomDocument17922) tutorial to learn how to create this demo from scratch.
+The current approach will not be updated in the future.
